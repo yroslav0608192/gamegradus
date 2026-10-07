@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game gradus | Discord Сервер</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+    
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <style>
+        :root {
+            --bg-color: #05050a;
+            --primary-neon: #8a2be2;
+            --secondary-neon: #00d2ff;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: #ffffff;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        h1, h2, h3, .font-display {
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        /* Animated Background Gradients */
+        .hero-bg {
+            position: relative;
+        }
+        .hero-bg::before {
+            content: '';
+            position: absolute;
+            top: -20%;
+            left: -10%;
+            width: 50vw;
+            height: 50vw;
+            background: radial-gradient(circle, rgba(138,43,226,0.15) 0%, rgba(0,0,0,0) 70%);
+            z-index: -1;
+            animation: float 10s ease-in-out infinite alternate;
+        }
+        .hero-bg::after {
+            content: '';
+            position: absolute;
+            bottom: -20%;
+            right: -10%;
+            width: 40vw;
+            height: 40vw;
+            background: radial-gradient(circle, rgba(0,210,255,0.15) 0%, rgba(0,0,0,0) 70%);
+            z-index: -1;
+            animation: float 8s ease-in-out infinite alternate-reverse;
+        }
+
+        @keyframes float {
+            0% { transform: translate(0, 0); }
+            50% { transform: translate(30px, 50px); }
+            100% { transform: translate(-30px, -20px); }
+        }
+
+        /* Text Gradients */
+        .text-gradient {
+            background: linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .text-gradient-purple {
+            background: linear-gradient(135deg, #b829ea 0%, #8a2be2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Glassmorphism Cards */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .glass-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.05), transparent);
+            transform: skewX(-20deg);
+            transition: left 0.5s;
+        }
+
+        .glass-card:hover::before {
+            left: 150%;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(138, 43, 226, 0.4);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(138, 43, 226, 0.2);
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        /* Pulsing Glow Button */
+        .btn-glow {
+            background: linear-gradient(90deg, #8a2be2, #4a00e0);
+            position: relative;
+            z-index: 1;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-glow::before {
+            content: '';
+            position: absolute;
+            top: -2px; left: -2px; right: -2px; bottom: -2px;
+            background: linear-gradient(90deg, #8a2be2, #00d2ff, #8a2be2);
+            background-size: 200% auto;
+            z-index: -1;
+            border-radius: inherit;
+            filter: blur(10px);
+            opacity: 0.7;
+            animation: pulse-border 3s linear infinite;
+        }
+
+        .btn-glow:hover {
+            transform: scale(1.05);
+        }
+        
+        .btn-glow:hover::before {
+            opacity: 1;
+            filter: blur(15px);
+        }
+
+        @keyframes pulse-border {
+            0% { background-position: 0% center; }
+            100% { background-position: 200% center; }
+        }
+
+        /* Scroll Animation Classes */
+        .fade-in-section {
+            opacity: 0;
+            transform: translateY(40px) scale(0.95);
+            visibility: hidden;
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+            will-change: opacity, visibility;
+        }
+
+        .fade-in-section.is-visible {
+            opacity: 1;
+            transform: none;
+            visibility: visible;
+        }
+
+        /* Game Tags */
+        .game-tag {
+            background: rgba(138, 43, 226, 0.1);
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            transition: all 0.3s ease;
+        }
+        .game-tag:hover {
+            background: rgba(0, 210, 255, 0.15);
+            border-color: rgba(0, 210, 255, 0.6);
+            box-shadow: 0 0 15px rgba(0, 210, 255, 0.3);
+            transform: scale(1.05);
+        }
+
+        /* Particles effect purely in CSS */
+        .particles {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            overflow: hidden; z-index: -1; pointer-events: none;
+        }
+        .particle {
+            position: absolute;
+            width: 4px; height: 4px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            animation: floatUp 15s infinite linear;
+        }
+        @keyframes floatUp {
+            0% { transform: translateY(100vh) translateX(0); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-10vh) translateX(50px); opacity: 0; }
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-purple-500 selection:text-white">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 top-0 transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center bg-[#05050a]/80 backdrop-blur-md border-b border-white/5">
+            <div class="flex items-center gap-2">
+                <i class="ph-fill ph-game-controller text-3xl text-[#8a2be2]"></i>
+                <span class="font-display font-bold text-xl tracking-wider text-white">GAME <span class="text-gradient">GRADUS</span></span>
+            </div>
+            <div class="hidden md:flex gap-8 text-sm font-medium text-gray-300">
+                <a href="#about" class="hover:text-white transition-colors hover:text-shadow">Почему мы</a>
+                <a href="#games" class="hover:text-white transition-colors">Игры</a>
+            </div>
+            <a href="#" class="hidden md:inline-flex px-5 py-2 rounded-full text-sm font-bold bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
+                Войти
+            </a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero-bg relative min-h-screen flex items-center justify-center pt-20 overflow-hidden">
+        <!-- CSS Particles -->
+        <div class="particles">
+            <div class="particle" style="left: 10%; animation-delay: 0s;"></div>
+            <div class="particle" style="left: 30%; animation-delay: 2s; width: 6px; height: 6px; background: #8a2be2"></div>
+            <div class="particle" style="left: 50%; animation-delay: 4s;"></div>
+            <div class="particle" style="left: 70%; animation-delay: 1s; width: 5px; height: 5px; background: #00d2ff"></div>
+            <div class="particle" style="left: 90%; animation-delay: 3s;"></div>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-6 text-center z-10 fade-in-section is-visible">
+            <div class="inline-block mb-4 px-4 py-1.5 rounded-full border border-purple-500/30 bg-purple-500/10 text-purple-300 text-sm font-medium backdrop-blur-sm">
+                🔥 Самое горячее сообщество 2026 года
+            </div>
+            <h1 class="text-5xl md:text-7xl lg:text-8xl font-black mb-6 tracking-tight leading-tight">
+                Добро пожаловать в <br />
+                <span class="text-gradient-purple font-display drop-shadow-[0_0_20px_rgba(138,43,226,0.3)]">Game gradus</span>
+            </h1>
+            <p class="text-lg md:text-2xl text-gray-400 mb-10 max-w-2xl mx-auto font-light">
+                Твое идеальное место для игр, поиска напарников и уютного общения. Присоединяйся к нам прямо сейчас!
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center items-center gap-6">
+                <a href="#" class="btn-glow px-10 py-4 rounded-xl text-white font-bold text-lg flex items-center gap-3">
+                    <i class="ph-fill ph-discord-logo text-2xl"></i>
+                    Присоединиться к серверу
+                </a>
+            </div>
+            
+            <!-- Quick Stats -->
+            <div class="mt-20 grid grid-cols-2 md:grid-cols-4 gap-8 max-w-3xl mx-auto pt-8 border-t border-white/5">
+                <div>
+                    <div class="text-3xl font-display font-bold text-white">5,000+</div>
+                    <div class="text-gray-500 text-sm mt-1">Участников</div>
+                </div>
+                <div>
+                    <div class="text-3xl font-display font-bold text-white text-gradient">24/7</div>
+                    <div class="text-gray-500 text-sm mt-1">Активность</div>
+                </div>
+                <div>
+                    <div class="text-3xl font-display font-bold text-white">50+</div>
+                    <div class="text-gray-500 text-sm mt-1">Голосовых каналов</div>
+                </div>
+                <div>
+                    <div class="text-3xl font-display font-bold text-white text-gradient-purple">∞</div>
+                    <div class="text-gray-500 text-sm mt-1">Веселья</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- About / Why Us Section -->
+    <section id="about" class="py-24 relative">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16 fade-in-section">
+                <h2 class="text-3xl md:text-5xl font-bold mb-4">Почему выбирают <span class="text-gradient">нас?</span></h2>
+                <p class="text-gray-400 max-w-2xl mx-auto">Мы создали пространство, где каждый геймер чувствует себя как дома. У нас есть всё для комфортной игры и общения.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Card 1 -->
+                <div class="glass-card p-8 fade-in-section" style="transition-delay: 0ms;">
+                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-purple-600/20 to-purple-600/5 flex items-center justify-center mb-6 border border-purple-500/20">
+                        <i class="ph-fill ph-users-three text-3xl text-[#8a2be2]"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-white">Активное комьюнити</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        Всегда есть с кем пообщаться в голосовых и текстовых каналах. Найди новых друзей и единомышленников в два клика.
+                    </p>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="glass-card p-8 fade-in-section" style="transition-delay: 150ms;">
+                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-600/20 to-blue-600/5 flex items-center justify-center mb-6 border border-blue-500/20">
+                        <i class="ph-fill ph-magnifying-glass text-3xl text-[#00d2ff]"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-white">Поиск напарников</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        Удобная система пингов и ролей. Быстро найдешь адекватных тимейтов для катки в любую популярную мультиплеерную игру.
+                    </p>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="glass-card p-8 fade-in-section" style="transition-delay: 300ms;">
+                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-yellow-600/20 to-yellow-600/5 flex items-center justify-center mb-6 border border-yellow-500/20">
+                        <i class="ph-fill ph-trophy text-3xl text-yellow-500"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-white">Ивенты и турниры</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        Регулярные розыгрыши, кастомные лобби, киносмотры и турниры с реальными призовыми фондами от администрации.
+                    </p>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="glass-card p-8 fade-in-section" style="transition-delay: 450ms;">
+                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-green-600/20 to-green-600/5 flex items-center justify-center mb-6 border border-green-500/20">
+                        <i class="ph-fill ph-shield-check text-3xl text-green-400"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-white">Адекватная админка</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        Справедливая и отзывчивая модерация 24/7. Мы строго следим за порядком, чтобы сохранять дружелюбную атмосферу.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Games Section -->
+    <section id="games" class="py-24 relative overflow-hidden">
+        <!-- Decoration background -->
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[#00d2ff]/5 rounded-full blur-[120px] z-0 pointer-events-none"></div>
+        
+        <div class="max-w-7xl mx-auto px-6 relative z-10">
+            <div class="text-center mb-16 fade-in-section">
+                <h2 class="text-3xl md:text-5xl font-bold mb-4">Во что мы <span class="text-gradient-purple">играем</span></h2>
+                <p class="text-gray-400 max-w-xl mx-auto">От хардкорных шутеров до расслабляющих песочниц. У нас есть выделенные категории для всех главных хитов.</p>
+            </div>
+
+            <div class="flex flex-wrap justify-center gap-4 fade-in-section">
+                <!-- Game Tags -->
+                <div class="game-tag px-6 py-4 rounded-xl flex items-center gap-3 cursor-pointer">
+                    <span class="w-3 h-3 rounded-full bg-orange-500 shadow-[0_0_10px_#f97316]"></span>
+                    <span class="font-display font-bold tracking-wide">CS2</span>
+                </div>
+                <div class="game-tag px-6 py-4 rounded-xl flex items-center gap-3 cursor-pointer">
+                    <span class="w-3 h-3 rounded-full bg-red-600 shadow-[0_0_10px_#dc2626]"></span>
+                    <span class="font-display font-bold tracking-wide">Dota 2</span>
+                </div>
+                <div class="game-tag px-6 py-4 rounded-xl flex items-center gap-3 cursor-pointer">
+                    <span class="w-3 h-3 rounded-full bg-red-500 shadow-[0_0_10px_#ef4444]"></span>
+                    <span class="font-display font-bold tracking-wide">Valorant</span>
+                </div>
+                <div class="game-tag px-6 py-4 rounded-xl flex items-center gap-3 cursor-pointer">
+                    <span class="w-3 h-3 rounded-full bg-green-500 shadow-[0_0_10px_#22c55e]"></span>
+                    <span class="font-display font-bold tracking-wide">Minecraft</span>
+                </div>
+                <div class="game-tag px-6 py-4 rounded-xl flex items-center gap-3 cursor-pointer">
+                    <span class="w-3 h-3 rounded-full bg-yellow-400 shadow-[0_0_10px_#facc15]"></span>
+                    <span class="font-display font-bold tracking-wide">GTA V</span>
+                </div>
+                <div class="game-tag px-6 py-4 rounded-xl flex items-center gap-3 cursor-pointer">
+                    <span class="w-3 h-3 rounded-full bg-pink-500 shadow-[0_0_10px_#ec4899]"></span>
+                    <span class="font-display font-bold tracking-wide">Rust</span>
+                </div>
+                <div class="game-tag px-6 py-4 rounded-xl flex items-center gap-3 cursor-pointer">
+                    <span class="w-3 h-3 rounded-full bg-blue-400 shadow-[0_0_10px_#60a5fa]"></span>
+                    <span class="font-display font-bold tracking-wide">Genshin Impact</span>
+                </div>
+                <div class="game-tag px-6 py-4 rounded-xl flex items-center gap-3 cursor-pointer">
+                    <span class="w-3 h-3 rounded-full bg-purple-500 shadow-[0_0_10px_#a855f7]"></span>
+                    <span class="font-display font-bold tracking-wide">И многие другие...</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to action block -->
+    <section class="py-20 relative z-10">
+        <div class="max-w-5xl mx-auto px-6">
+            <div class="glass-card p-12 text-center fade-in-section rounded-3xl border-purple-500/30 bg-gradient-to-b from-purple-900/10 to-transparent">
+                <h2 class="text-3xl md:text-4xl font-bold mb-6 font-display">Готов ворваться в игру?</h2>
+                <p class="text-gray-300 mb-8 max-w-2xl mx-auto">Жми на кнопку ниже, проходи быструю верификацию на сервере и выбирай любимые игры. Мы ждем только тебя!</p>
+                <a href="#" class="btn-glow inline-flex px-12 py-4 rounded-xl text-white font-bold text-lg items-center gap-3 shadow-[0_0_30px_rgba(138,43,226,0.6)]">
+                    <i class="ph-fill ph-discord-logo text-2xl"></i>
+                    Залететь на сервер
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t border-white/5 bg-[#030305] pt-12 pb-6 relative z-10">
+        <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="flex items-center gap-2">
+                <i class="ph-fill ph-game-controller text-2xl text-[#8a2be2]"></i>
+                <span class="font-display font-bold text-lg text-white">GAME GRADUS</span>
+            </div>
+            
+            <div class="text-gray-500 text-sm text-center md:text-left">
+                &copy; 2026 Game gradus. Все права защищены.
+            </div>
+            
+            <div class="flex gap-4">
+                <a href="#" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:text-white hover:bg-purple-600 transition-all">
+                    <i class="ph-fill ph-discord-logo text-xl"></i>
+                </a>
+                <a href="#" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:text-white hover:bg-blue-500 transition-all">
+                    <i class="ph-fill ph-telegram-logo text-xl"></i>
+                </a>
+                <a href="#" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:text-white hover:bg-red-500 transition-all">
+                    <i class="ph-fill ph-youtube-logo text-xl"></i>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript for Animations and Interactions -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            /* Intersection Observer for Fade-In animations */
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.15 // Trigger when 15% of the element is visible
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        // Optional: stop observing once it has faded in
+                        // observer.unobserve(entry.target); 
+                    }
+                });
+            }, observerOptions);
+
+            const fadeElements = document.querySelectorAll('.fade-in-section');
+            fadeElements.forEach(el => observer.observe(el));
+
+            /* Navbar scroll effect */
+            const navbar = document.getElementById('navbar');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    navbar.classList.add('shadow-lg', 'shadow-purple-900/10');
+                    navbar.style.backgroundColor = 'rgba(5, 5, 10, 0.95)';
+                } else {
+                    navbar.classList.remove('shadow-lg', 'shadow-purple-900/10');
+                    navbar.style.backgroundColor = 'rgba(5, 5, 10, 0.8)';
+                }
+            });
+            
+            // Generate some random particles dynamically (optional enhancement)
+            const particlesContainer = document.querySelector('.particles');
+            for(let i=0; i<10; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // Randomize properties
+                const size = Math.random() * 5 + 2; // 2px to 7px
+                const left = Math.random() * 100; // 0% to 100%
+                const duration = Math.random() * 10 + 10; // 10s to 20s
+                const delay = Math.random() * 5; // 0s to 5s
+                
+                // Random color out of theme colors
+                const colors = ['rgba(255,255,255,0.3)', 'rgba(138,43,226,0.5)', 'rgba(0,210,255,0.5)'];
+                const color = colors[Math.floor(Math.random() * colors.length)];
+
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${left}%`;
+                particle.style.animationDuration = `${duration}s`;
+                particle.style.animationDelay = `${delay}s`;
+                particle.style.background = color;
+
+                particlesContainer.appendChild(particle);
+            }
+        });
+    </script>
+</body>
+</html>
